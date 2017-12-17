@@ -31,3 +31,8 @@ cell_t** init_Board(long p_nb_cell)
     }
     return c;
 }
+
+void check_neighbourhood(cell** p_board, cell p_cell)
+{
+  unsigned long x
+}
