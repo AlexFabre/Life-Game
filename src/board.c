@@ -2,9 +2,10 @@
 #include "stdlib.h"
 #include "board.h"
 
-void change_color(cell_t** p_board, long x, long y, color_t p_color)
+void change_status(cell_t** p_board, long x, long y)
 {
-	p_board[x][y].color = p_color;
+	p_board[x][y].status = p_board[x][y].new_status;
+  p_board[x][y].change = 0;
 }
 
 cell_t** init_Board(long p_nb_cell)
@@ -26,7 +27,7 @@ cell_t** init_Board(long p_nb_cell)
         long j;
         for (j = 0; j < p_nb_cell; j++)
         {
-          c[i][j].color=White;
+          c[i][j].status = Dead;
         }
     }
     return c;

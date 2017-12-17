@@ -17,7 +17,7 @@ cell* review_changes(unsigned long p_nb_cell, cell** p_board)
     {
         for (j = 0; j < p_nb_cell; ++j)
         {
-            if (p_board[i][j].color == Black)
+            if (p_board[i][j].status == Alive)
             {
                 /* We only look at the living cell's neighbours */
                 change = check_neighbourhood(p_board, p_board[i][j]);
@@ -34,12 +34,11 @@ cell* review_changes(unsigned long p_nb_cell, cell** p_board)
 void evolution(cell** p_board, cell_tab_t p_changing_cell)
 {
     unsigned long i;
-
     for (i = 0; i < p_changing_cell.size; ++i)
     {
         x = p_changing_cell.list[i].x_axis;
         y = p_changing_cell.list[i].y_axis;
-        p_board[x][y].color = p_board[x][y].new_color;
+        p_board[x][y].status = p_board[x][y].new_status;
     }
 }
 
@@ -49,7 +48,7 @@ int main(int argc, char const *argv[])
     unsigned long nb_cell = 20;
     unsigned long nb_step = 2;
 
-    /* Init the game with grid size and black cells positions */
+    /* Init the game with grid size and Alive cells positions */
     cell** board = init_Board(nb_cell);
     add_template(board, template, pos_x, pos_y);
 
@@ -78,19 +77,19 @@ void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_boa
     strcat(filename, name);
 
     
-    unsigned char data[p_nb_cell][p_nb_cell]; /* 2D array for colors (shades of gray) */
-    const int MaxColorComponentValue = 255; /* color component is coded from 0 to 255 ;  it is 8 bit color file */
+    unsigned char data[p_nb_cell][p_nb_cell]; /* 2D array for statuss (shades of gray) */
+    const int MaxstatusComponentValue = 255; /* status component is coded from 0 to 255 ;  it is 8 bit status file */
     FILE * fp;
 
     long x,y;
     for (x = 0; x < p_nb_cell; ++x) {
         for (y = 0; y < p_nb_cell; ++y) {
-            data[x][y] = p_board[y][p_nb_cell-x-1].color;
+            data[x][y] = p_board[y][p_nb_cell-x-1].status;
         }
     }
 
     fp = fopen(filename, "wb");
-    fprintf(fp, "P5\n %s\n %ld\n %ld\n %d\n", comment, p_nb_cell, p_nb_cell, MaxColorComponentValue); /* write header to the file */
+    fprintf(fp, "P5\n %s\n %ld\n %ld\n %d\n", comment, p_nb_cell, p_nb_cell, MaxstatusComponentValue); /* write header to the file */
     fwrite(data, sizeof(data), 1, fp); /* write image data bytes to the file */
     fclose(fp);
 }

@@ -1,22 +1,23 @@
 /********************************************************************
 Enumeration
 ********************************************************************/
-typedef enum color_e
+typedef enum state_s
 {
-    White = 255,
-    Black = 0,
-    Grey = 125
-} color_t;
+    Dead = 255,
+    Alive = 0
+} state_t;
 
 /********************************************************************
 Structure
 ********************************************************************/
 typedef struct cell_s
 {
-    unsigned long       x_axis;
-    unsigned long       y_axis;
-    char change         False;
-    color_t             color;
+    unsigned long           x_axis;
+    unsigned long           y_axis;
+    char has_to_change      0;
+    char living_neighbour   0; /*< Number of living neighbours around that cell. Min 0 max 8 */
+    status_t                 status;
+    status_t                 new_status;
 } cell_t;
 
 typedef struct cell_tab_s
@@ -29,5 +30,5 @@ typedef struct cell_tab_s
 Function
 ********************************************************************/
 cell_t** init_Board(unsigned long p_nb_cell);
-void change_color(cell_t** p_board, unsigned long x, unsigned long y, color_t color);
+void change_status(cell_t** p_board, unsigned long x, unsigned long y, status_t status);
 void check_neighbourhood(cell** p_board, cell p_cell);
