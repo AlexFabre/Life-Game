@@ -14,10 +14,9 @@ typedef struct cell_s
 {
     unsigned long           x_axis;
     unsigned long           y_axis;
-    char has_to_change      0;
+    char changing      		0;
     char living_neighbour   0; /*< Number of living neighbours around that cell. Min 0 max 8 */
     status_t                 status;
-    status_t                 new_status;
 } cell_t;
 
 typedef struct cell_tab_s

@@ -4,10 +4,10 @@
 #include "board.h"
 
 void evolution(cell** p_board, cell_tab_t p_changing_cell);
-cell_tab_t review_changes(unsigned long p_nb_cell, cell** p_board);
+void review_changes(unsigned long p_nb_cell, cell** p_board, cell_tab_t p_changing_cell);
 void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_board);
 
-cell* review_changes(unsigned long p_nb_cell, cell** p_board)
+cell* review_changes(unsigned long p_nb_cell, cell** p_board, cell_tab_t p_changing_cell)
 {
     unsigned long i,j;
     char change;
@@ -52,12 +52,12 @@ int main(int argc, char const *argv[])
     cell** board = init_Board(nb_cell);
     add_template(board, template, pos_x, pos_y);
 
-    cell* changing_cell;
+    cell_tab_t changing_cell;
 
     while(i) 
     {
         print_picture(i, nb_cell, board);
-        changing_cell = review_changes(nb_cell, board); /* Review all the cells that will have to change */
+        review_changes(nb_cell, board, changing_cell); /* Review all the cells that will have to change */
         evolution(board, changing_cell); /* Makes all the cells changes */
         i++;
     }
