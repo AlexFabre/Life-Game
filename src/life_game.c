@@ -63,10 +63,10 @@ int main(int argc, char const *argv[])
     cell** board = init_Board(nb_cell);
     //add_template(board, template, pos_x, pos_y);
     board[4][5].status = Alive;
-    inform_neighbour(board, nb_cell, board[4][5]);
     board[5][5].status = Alive;
-    inform_neighbour(board, nb_cell, board[5][5]);
     board[6][5].status = Alive;
+    inform_neighbour(board, nb_cell, board[4][5]);
+    inform_neighbour(board, nb_cell, board[5][5]);
     inform_neighbour(board, nb_cell, board[6][5]);
 
     while(i) 
