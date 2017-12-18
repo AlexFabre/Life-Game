@@ -6,11 +6,11 @@ void change_status(cell_t** p_board, long x, long y)
 {
         if (p_board[x][y].status) /* Any other value than 0 means Dead*/
         {
-                p_board[x][y].status == Alive;
+                p_board[x][y].status == Alive; /* 0 */
         }
         else
         {
-                p_board[x][y].status == Dead;
+                p_board[x][y].status == Dead; /* 255 */
         }
 }
 
@@ -34,7 +34,7 @@ cell_t** init_Board(long p_nb_cell)
         return c;
 }
 
-void inform_neighbours(cell** p_board, unsigned long p_nb_cell, cell* p_cell)
+void inform_neighbour(cell** p_board, unsigned long p_nb_cell, cell* p_cell)
 {
     unsigned long x, y, start_x, start_y, stop_x, stop_y, i, j;
     char cell_state = 1; /*< Will increment or decrement the number of living cell around each neighbour cell*/

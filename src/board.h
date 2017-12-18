@@ -3,8 +3,8 @@ Enumeration
 ********************************************************************/
 typedef enum state_s
 {
-    Dead = 255,
-    Alive = 0
+    Dead = 255, /* Correspond to a white cell */
+    Alive = 0 /* Correspond to a black cell */
 } state_t;
 
 /********************************************************************

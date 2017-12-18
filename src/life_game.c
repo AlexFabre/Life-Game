@@ -4,14 +4,12 @@
 #include "board.h"
 
 void evolution(cell** p_board, cell_tab_t p_changing_cell);
-void review_changes(unsigned long p_nb_cell, cell** p_board, cell_tab_t p_changing_cell);
+void prepare_evolution(unsigned long p_nb_cell, cell** p_board);
 void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_board);
 
-cell* review_changes(unsigned long p_nb_cell, cell** p_board, cell_tab_t p_changing_cell)
+void prepare_evolution(unsigned long p_nb_cell, cell** p_board)
 {
     unsigned long i,j;
-    char change;
-    cell_tab_t change_tab;
 
     for (i = 0; i < p_nb_cell; ++i)
     {
@@ -19,12 +17,25 @@ cell* review_changes(unsigned long p_nb_cell, cell** p_board, cell_tab_t p_chang
         {
             if (p_board[i][j].status == Alive)
             {
-                /* We only look at the living cell's neighbours */
-                change = check_neighbourhood(p_board, p_board[i][j]);
-                if (change)
+                /* This cell is Alive */
+                switch(p_board[i][j].living_neighbour)
                 {
-                    add(change_tab.list, p_board[i][j]);
-                    change_tab.size++;
+                    case 2:
+                    case 3:
+                        Nop();
+                        /* Nothing happens for this cell*/
+                        break;
+                    default:
+                        change_status(p_board, i, j);
+                        break;
+                }
+            }
+            else 
+            {
+                if(p_board[i][j].living_neighbour == 3)
+                {
+                    /* This dead cell has 3 living neighbours */
+                    change_status(p_board, i, j);
                 }
             }
         }
@@ -46,19 +57,23 @@ int main(int argc, char const *argv[])
 {
     /* code */
     unsigned long nb_cell = 20;
-    unsigned long nb_step = 2;
+    unsigned long nb_step = 5;
 
     /* Init the game with grid size and Alive cells positions */
     cell** board = init_Board(nb_cell);
-    add_template(board, template, pos_x, pos_y);
-
-    cell_tab_t changing_cell;
+    //add_template(board, template, pos_x, pos_y);
+    board[4][5].status = Alive;
+    inform_neighbour(board, nb_cell, board[4][5]);
+    board[5][5].status = Alive;
+    inform_neighbour(board, nb_cell, board[5][5]);
+    board[6][5].status = Alive;
+    inform_neighbour(board, nb_cell, board[6][5]);
 
     while(i) 
     {
         print_picture(i, nb_cell, board);
-        review_changes(nb_cell, board, changing_cell); /* Review all the cells that will have to change */
-        evolution(board, changing_cell); /* Makes all the cells changes */
+        prepare_evolution(nb_cell, board); /* Review all the cells that will have to change */
+        evolution(nb_cell, board); /* Makes all the cells changes */
         i++;
     }
 
