@@ -1,13 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "life_game.h"
 #include "board.h"
 
-void evolution(cell** p_board, cell_tab_t p_changing_cell);
-void prepare_evolution(unsigned long p_nb_cell, cell** p_board);
+/********************************************************************
+Function
+********************************************************************/
+void evolution(unsigned long p_nb_cell, cell_t** p_board);
+void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board);
 void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_board);
 
-void prepare_evolution(unsigned long p_nb_cell, cell** p_board)
+/********************************************************************
+Function
+********************************************************************/
+void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board)
 {
     unsigned long i,j;
 
@@ -17,59 +24,75 @@ void prepare_evolution(unsigned long p_nb_cell, cell** p_board)
         {
             if (p_board[i][j].status == Alive)
             {
+                printf("Cell [%ld,%ld] Alive\n", i, j);
+                printf("Living neighbours:%d\n", p_board[i][j].living_neighbour);
+
                 /* This cell is Alive */
                 switch(p_board[i][j].living_neighbour)
                 {
                     case 2:
                     case 3:
-                        Nop();
+                        printf("Staying Alive\n");
                         /* Nothing happens for this cell*/
                         break;
                     default:
-                        change_status(p_board, i, j);
+                        p_board[i][j].changing = 1;
                         break;
                 }
             }
-            else 
+            else /* Dead cells */
             {
                 if(p_board[i][j].living_neighbour == 3)
                 {
                     /* This dead cell has 3 living neighbours */
-                    change_status(p_board, i, j);
+                    p_board[i][j].changing = 1;
                 }
+            }
+            printf("Changing:%d\n", p_board[i][j].changing);
+        }
+    }
+}
+
+void evolution(unsigned long p_nb_cell, cell_t** p_board)
+{
+    unsigned long i,j;
+
+    for (i = 0; i < p_nb_cell; ++i)
+    {
+        for (j = 0; j < p_nb_cell; ++j)
+        {
+            if (p_board[i][j].changing)
+            {
+                printf("Cell [%ld,%ld] Changing\n", i, j);
+                change_status(&p_board[i][j]);
+                p_board[i][j].changing = 0;
+                inform_neighbour(p_board, p_nb_cell, &p_board[i][j]);
             }
         }
     }
 }
 
-void evolution(cell** p_board, cell_tab_t p_changing_cell)
-{
-    unsigned long i;
-    for (i = 0; i < p_changing_cell.size; ++i)
-    {
-        x = p_changing_cell.list[i].x_axis;
-        y = p_changing_cell.list[i].y_axis;
-        p_board[x][y].status = p_board[x][y].new_status;
-    }
-}
-
+/********************************************************************
+Code
+********************************************************************/
 int main(int argc, char const *argv[])
 {
     /* code */
-    unsigned long nb_cell = 20;
-    unsigned long nb_step = 5;
+    unsigned long nb_cell = 5;
+    unsigned long nb_step = 2;
+    unsigned long i = 0;
 
     /* Init the game with grid size and Alive cells positions */
-    cell** board = init_Board(nb_cell);
+    cell_t** board = init_Board(nb_cell);
     //add_template(board, template, pos_x, pos_y);
-    board[4][5].status = Alive;
-    board[5][5].status = Alive;
-    board[6][5].status = Alive;
-    inform_neighbour(board, nb_cell, board[4][5]);
-    inform_neighbour(board, nb_cell, board[5][5]);
-    inform_neighbour(board, nb_cell, board[6][5]);
+    board[1][2].status = Alive;
+    board[2][2].status = Alive;
+    board[3][2].status = Alive;
+    inform_neighbour(board, nb_cell, &board[1][2]);
+    inform_neighbour(board, nb_cell, &board[2][2]);
+    inform_neighbour(board, nb_cell, &board[3][2]);
 
-    while(i) 
+    while(i<nb_step) 
     {
         print_picture(i, nb_cell, board);
         prepare_evolution(nb_cell, board); /* Review all the cells that will have to change */

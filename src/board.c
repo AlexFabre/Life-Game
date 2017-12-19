@@ -2,15 +2,18 @@
 #include "stdlib.h"
 #include "board.h"
 
-void change_status(cell_t** p_board, long x, long y)
+/********************************************************************
+Functions
+********************************************************************/
+void change_status(cell_t* p_cell)
 {
-        if (p_board[x][y].status) /* Any other value than 0 means Dead*/
+        if (p_cell->status) /* Any other value than 0 means Dead*/
         {
-                p_board[x][y].status == Alive; /* 0 */
+                p_cell->status = Alive; /* 0 */
         }
         else
         {
-                p_board[x][y].status == Dead; /* 255 */
+                p_cell->status = Dead; /* 255 */
         }
 }
 
@@ -34,7 +37,7 @@ cell_t** init_Board(long p_nb_cell)
         return c;
 }
 
-void inform_neighbour(cell** p_board, unsigned long p_nb_cell, cell* p_cell)
+void inform_neighbour(cell_t** p_board, unsigned long p_nb_cell, cell_t* p_cell)
 {
     unsigned long x, y, start_x, start_y, stop_x, stop_y, i, j;
     char cell_state = 1; /*< Will increment or decrement the number of living cell around each neighbour cell*/
@@ -73,10 +76,10 @@ void inform_neighbour(cell** p_board, unsigned long p_nb_cell, cell* p_cell)
     {
         for (j = start_y; j <= stop_y; ++j)
         {
-            if !(i==x && j==y)
+            if (i!=x || j!=y)
             {
                 p_board[i][j].living_neighbour += cell_state;
-            }p_board[i][j].living_neighbour += cell_state;
+            }
         }
     }
 }
