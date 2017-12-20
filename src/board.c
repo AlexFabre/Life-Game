@@ -37,18 +37,15 @@ cell_t** init_Board(long p_nb_cell)
         return c;
 }
 
-void inform_neighbour(cell_t** p_board, unsigned long p_nb_cell, cell_t* p_cell)
+void inform_neighbour(cell_t** p_board, unsigned long p_nb_cell, unsigned long x, unsigned long y)
 {
-    unsigned long x, y, start_x, start_y, stop_x, stop_y, i, j;
+    unsigned long start_x, start_y, stop_x, stop_y, i, j;
     char cell_state = 1; /*< Will increment or decrement the number of living cell around each neighbour cell*/
 
-    if (p_cell->status) /* If the current cell is dying*/
+    if (p_board[x][y].status) /* If the current cell is dying*/
     {
         cell_state = -1; /* We decrement*/
     }
-
-    x = p_cell->x_axis;
-    y = p_cell->y_axis;
 
     if (x)
     {

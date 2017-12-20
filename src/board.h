@@ -31,4 +31,4 @@ Function
 ********************************************************************/
 cell_t** init_Board(long p_nb_cell);
 void change_status(cell_t* p_cell);
-void inform_neighbour(cell_t** p_board, unsigned long p_nb_cell, cell_t* p_cell);
+void inform_neighbour(cell_t** p_board, unsigned long p_nb_cell, unsigned long x, unsigned long y);

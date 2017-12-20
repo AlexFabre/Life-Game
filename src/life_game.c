@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "life_game.h"
 #include "board.h"
+#include "life_game.h"
 
 /********************************************************************
 Function
@@ -10,6 +10,7 @@ Function
 void evolution(unsigned long p_nb_cell, cell_t** p_board);
 void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board);
 void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_board);
+void add_template(cell_t** p_board, template_t template, unsigned long pos_x, unsigned long pos_y);
 
 /********************************************************************
 Function
@@ -22,17 +23,15 @@ void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board)
     {
         for (j = 0; j < p_nb_cell; ++j)
         {
+
             if (p_board[i][j].status == Alive)
             {
-                printf("Cell [%ld,%ld] Alive\n", i, j);
-                printf("Living neighbours:%d\n", p_board[i][j].living_neighbour);
 
                 /* This cell is Alive */
                 switch(p_board[i][j].living_neighbour)
                 {
                     case 2:
                     case 3:
-                        printf("Staying Alive\n");
                         /* Nothing happens for this cell*/
                         break;
                     default:
@@ -44,11 +43,9 @@ void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board)
             {
                 if(p_board[i][j].living_neighbour == 3)
                 {
-                    /* This dead cell has 3 living neighbours */
                     p_board[i][j].changing = 1;
                 }
             }
-            printf("Changing:%d\n", p_board[i][j].changing);
         }
     }
 }
@@ -63,15 +60,34 @@ void evolution(unsigned long p_nb_cell, cell_t** p_board)
         {
             if (p_board[i][j].changing)
             {
-                printf("Cell [%ld,%ld] Changing\n", i, j);
                 change_status(&p_board[i][j]);
                 p_board[i][j].changing = 0;
-                inform_neighbour(p_board, p_nb_cell, &p_board[i][j]);
+                inform_neighbour(p_board, p_nb_cell, i ,j);
             }
         }
     }
 }
 
+void add_template(cell_t** p_board, template_t template, unsigned long pos_x, unsigned long pos_y)
+{
+    switch(template)
+    {
+        case FIGURE_1:
+            unsigned long tab_x[4];
+            unsigned long tab_y[4];
+            p_board[pos_x+1][pos_y+2].status = Alive;
+            p_board[pos_x+2][pos_y+2].status = Alive;
+            p_board[pos_x+3][pos_y+2].status = Alive;
+            p_board[pos_x+3][pos_y+1].status = Alive;
+            inform_neighbour(p_board, nb_cell, pos_x+1, pos_y+2);
+            inform_neighbour(p_board, nb_cell, pos_x+2, pos_y+2);
+            inform_neighbour(p_board, nb_cell, pos_x+3, pos_y+2);
+            inform_neighbour(p_board, nb_cell, pos_x+3, pos_y+1);
+            break;
+        default:
+            break;
+    }
+}
 /********************************************************************
 Code
 ********************************************************************/
@@ -84,13 +100,15 @@ int main(int argc, char const *argv[])
 
     /* Init the game with grid size and Alive cells positions */
     cell_t** board = init_Board(nb_cell);
-    //add_template(board, template, pos_x, pos_y);
-    board[1][2].status = Alive;
-    board[2][2].status = Alive;
-    board[3][2].status = Alive;
-    inform_neighbour(board, nb_cell, &board[1][2]);
-    inform_neighbour(board, nb_cell, &board[2][2]);
-    inform_neighbour(board, nb_cell, &board[3][2]);
+    add_template(board, FIGURE_1, 1, 2);
+    // board[1][2].status = Alive;
+    // board[2][2].status = Alive;
+    // board[3][2].status = Alive;
+    // board[3][1].status = Alive;
+    // inform_neighbour(board, nb_cell, 1, 2);
+    // inform_neighbour(board, nb_cell, 2, 2);
+    // inform_neighbour(board, nb_cell, 3, 2);
+    // inform_neighbour(board, nb_cell, 3, 1);
 
     while(i<nb_step) 
     {
