@@ -4,13 +4,19 @@
 #include "board.h"
 #include "life_game.h"
 
+#define     MAX_SIZE_TEMPLATE   50 /*< Maximum size of a template in number of cell*/
+#define     X                   0
+#define     Y                   1
+#define     DEFAULT_GRID_SIZE   50
+#define     DEFAULT_STEP        60
+
 /********************************************************************
 Function
 ********************************************************************/
 void evolution(unsigned long p_nb_cell, cell_t** p_board);
 void prepare_evolution(unsigned long p_nb_cell, cell_t** p_board);
 void print_picture(unsigned long p_step, unsigned long p_nb_cell, cell_t** p_board);
-void add_template(cell_t** p_board, template_t template, unsigned long pos_x, unsigned long pos_y);
+void add_template(cell_t** p_board, unsigned long p_nb_cell, template_t template, unsigned long p_pos_x, unsigned long p_pos_y);
 
 /********************************************************************
 Function
@@ -68,24 +74,68 @@ void evolution(unsigned long p_nb_cell, cell_t** p_board)
     }
 }
 
-void add_template(cell_t** p_board, template_t template, unsigned long pos_x, unsigned long pos_y)
+void add_template(cell_t** p_board, unsigned long p_nb_cell, template_t template, unsigned long p_pos_x, unsigned long p_pos_y)
 {
+    unsigned long   tab_xy[2][MAX_SIZE_TEMPLATE];
+    unsigned int    size=0, i;
+
     switch(template)
     {
         case FIGURE_1:
-            unsigned long tab_x[4];
-            unsigned long tab_y[4];
-            p_board[pos_x+1][pos_y+2].status = Alive;
-            p_board[pos_x+2][pos_y+2].status = Alive;
-            p_board[pos_x+3][pos_y+2].status = Alive;
-            p_board[pos_x+3][pos_y+1].status = Alive;
-            inform_neighbour(p_board, nb_cell, pos_x+1, pos_y+2);
-            inform_neighbour(p_board, nb_cell, pos_x+2, pos_y+2);
-            inform_neighbour(p_board, nb_cell, pos_x+3, pos_y+2);
-            inform_neighbour(p_board, nb_cell, pos_x+3, pos_y+1);
+            tab_xy[X][size] = 0; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 1; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 1; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 0; tab_xy[Y][size++] = 1;
+
+            tab_xy[X][size] = 3; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 4; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 4; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 5; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 5; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 6; tab_xy[Y][size++] = 1;
+
+            tab_xy[X][size] = 9; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 9; tab_xy[Y][size++] = -1;
+            tab_xy[X][size] = 9; tab_xy[Y][size++] = -2;
+            tab_xy[X][size] = 9; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 9; tab_xy[Y][size++] = 4;
+            tab_xy[X][size] = 10; tab_xy[Y][size++] = -2;
+            tab_xy[X][size] = 10; tab_xy[Y][size++] = 4;
+            tab_xy[X][size] = 11; tab_xy[Y][size++] = -1;
+            tab_xy[X][size] = 11; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 12; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 12; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 12; tab_xy[Y][size++] = 2;
+
+            tab_xy[X][size] = 26; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 26; tab_xy[Y][size++] = 4;
+            tab_xy[X][size] = 26; tab_xy[Y][size++] = 5;
+            tab_xy[X][size] = 26; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 26; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 27; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 27; tab_xy[Y][size++] = 4;
+            tab_xy[X][size] = 27; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 27; tab_xy[Y][size++] = 6;
+            tab_xy[X][size] = 27; tab_xy[Y][size++] = 0;
+            tab_xy[X][size] = 28; tab_xy[Y][size++] = 5;
+            tab_xy[X][size] = 28; tab_xy[Y][size++] = 1;
+            tab_xy[X][size] = 29; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 29; tab_xy[Y][size++] = 4;
+            tab_xy[X][size] = 29; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 30; tab_xy[Y][size++] = 3;
+
+            tab_xy[X][size] = 34; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 34; tab_xy[Y][size++] = 3;
+            tab_xy[X][size] = 35; tab_xy[Y][size++] = 2;
+            tab_xy[X][size] = 35; tab_xy[Y][size++] = 3;
             break;
         default:
             break;
+    }
+    for (i = 0; i < size; ++i)
+    {
+        p_board[ p_pos_x + tab_xy[X][i] ][ p_pos_y + tab_xy[Y][i] ].status = Alive;
+        inform_neighbour(p_board, p_nb_cell, p_pos_x + tab_xy[X][i], p_pos_y + tab_xy[Y][i]);
     }
 }
 /********************************************************************
@@ -93,22 +143,32 @@ Code
 ********************************************************************/
 int main(int argc, char const *argv[])
 {
+    
+
     /* code */
-    unsigned long nb_cell = 5;
-    unsigned long nb_step = 2;
-    unsigned long i = 0;
+    unsigned long nb_cell; /**< Unsigned long integer. Size of the grid: nb_cell*nb_cell */
+    unsigned long nb_step; /**< Unsigned long integer. Number of step to compute. */
+    unsigned long i;
+
+    if(argc>1){
+        /* The size of the grid is specified */
+        nb_cell = atoi(argv[1]);
+        if (nb_cell < DEFAULT_GRID_SIZE){
+            nb_cell = DEFAULT_GRID_SIZE;
+        }
+        if (argc > 2) {
+            /* The number of step is specified */
+            nb_step = atoi(argv[2]);
+            if (nb_step < DEFAULT_STEP) {
+                nb_step = DEFAULT_STEP;
+            }
+        }
+    }
 
     /* Init the game with grid size and Alive cells positions */
     cell_t** board = init_Board(nb_cell);
-    add_template(board, FIGURE_1, 1, 2);
-    // board[1][2].status = Alive;
-    // board[2][2].status = Alive;
-    // board[3][2].status = Alive;
-    // board[3][1].status = Alive;
-    // inform_neighbour(board, nb_cell, 1, 2);
-    // inform_neighbour(board, nb_cell, 2, 2);
-    // inform_neighbour(board, nb_cell, 3, 2);
-    // inform_neighbour(board, nb_cell, 3, 1);
+
+    add_template(board, nb_cell, FIGURE_1, 1, 40);
 
     while(i<nb_step) 
     {
