@@ -18,4 +18,4 @@ Make life_game.sh bash script executable
 Then run it with three arguments: the size of the grid, the number of steps, and the pattern to start with.
 * `./langton_ant.sh 20 100 3`
 
-Thanks
+Thanks, Alex
